@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+    <head></head>
+    <body>
+        <div id="content">
+            <div id="songs">
+                <span id="play">PL</span>
+                <span id="prev">PR</span>
+                <span id="next">NX</span>
+                {% for song in album.songs %}
+                <div id="song-{{ song.id }}">
+                    <span>{{ song.title }}</span>
+                    <audio id="song-{{ song.id }}-audio" src="/audio/{{ song.id }}.mp3" type="audio/wav" />
+                </div>
+                {% endfor %}
+            </div>
+            <div id="album-art">
+                <img src="/album/{{ album.id }}/art.jpg" alt="album cover" width=50>
+            </div>
+        </div>
+
+        <script>
+            function Player(play, prev, next, songs) {
+                this.current_song = 0;
+                this.songs = songs;
+                this.state = "PAUSED";
+
+                play.onclick = this.play_pause.bind(this);
+                prev.onclick = this.prev.bind(this);
+                next.onclick = this.next.bind(this);
+            }
+
+            Player.prototype.play_pause = function() {
+                var cur_song = this.current_song_el();
+
+                if (this.state == "PAUSED") {
+                    this.state = "PLAYING";
+                    cur_song.play();
+                } else {
+                    this.state = "PAUSED";
+                    cur_song.pause();
+                }
+            };
+
+            Player.prototype.next = function() {
+                var cur_song = this.current_song_el();
+
+                cur_song.pause();
+                cur_song.currentTime = 0;
+                this.state = "PAUSED";
+
+                if (this.current_song < this.songs.length - 1) {
+                    this.current_song += 1;
+                    cur_song = this.current_song_el();
+                    this.state = "PLAYING";
+                    cur_song.play();
+                } else {
+                    this.current_song = 0;
+                }
+            };
+
+            Player.prototype.prev = function() {
+                var cur_song = this.current_song_el();
+
+                cur_song.pause();
+                cur_song.currentTime = 0;
+                this.state = "PAUSED";
+
+                if (this.current_song > 0) {
+                    this.current_song -= 1;
+                    cur_song = this.current_song_el();
+                    this.state = "PLAYING";
+                    cur_song.play();
+                }
+            };
+
+            Player.prototype.current_song_el= function() {
+                return document.getElementById(this.songs[this.current_song] + "-audio");
+            };
+
+            var songs = [
+                {% for song in album.songs %}
+                "song-{{ song.id }}",
+                {% endfor %}
+            ];
+
+            var player = new Player(
+                document.getElementById("play"),
+                document.getElementById("prev"),
+                document.getElementById("next"),
+                songs
+            );
+        </script>
+    </body>
+</html>

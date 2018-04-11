@@ -1,0 +1,6 @@
+yj/art/*
+yj/audio/*
+*__pycache__/*
+*swp
+*pyc
+venv

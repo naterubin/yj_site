@@ -1,22 +1,46 @@
 <!doctype html>
 <html>
-    <head></head>
+    <head>
+        <title>{{ album.title }}</title>
+
+    <style>
+    body {
+        font-size: 24pt;
+        font-style: italic;
+    }
+    #album-art {
+        float: right;
+        width: 600px;
+    }
+    #album-art img {
+        width: 100%;
+    }
+    #songs {
+        margin-right: 600px;
+        padding: 50px;
+    }
+    .clear {
+        clear: both;
+    }
+    </style>
+    </head>
     <body>
         <div id="content">
+            <div id="album-art">
+                <img src="/album/{{ album.id }}/art.jpg" alt="album cover">
+            </div>
             <div id="songs">
                 <span id="play">PL</span>
                 <span id="prev">PR</span>
                 <span id="next">NX</span>
                 {% for song in album.songs %}
                 <div id="song-{{ song.id }}">
-                    <span>{{ song.title }}</span>
+                    <span>{{ song.track_number }}. {{ song.title }}</span>
                     <audio id="song-{{ song.id }}-audio" src="/audio/{{ song.id }}.mp3" type="audio/wav" />
                 </div>
                 {% endfor %}
             </div>
-            <div id="album-art">
-                <img src="/album/{{ album.id }}/art.jpg" alt="album cover" width=50>
-            </div>
+            <div class="clear"></div>
         </div>
 
         <script>

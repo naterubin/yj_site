@@ -1,5 +1,6 @@
 yj/art/*
 yj/audio/*
+yj/zip/*
 *__pycache__/*
 *swp
 *pyc

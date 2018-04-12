@@ -1,12 +1,13 @@
 <!doctype html>
 <html>
     <head>
-        <title>{{ album.title }}</title>
+        <title>{{ config['BAND_NAME'] }} - {{ album.title }}</title>
 
         <style>
         body {
             font-size: 24pt;
             font-style: italic;
+            background-color: {{ album.background_color }};
         }
         #album-art {
             float: right;
@@ -29,6 +30,9 @@
         .current-song {
             text-decoration: underline;
         }
+        .download {
+            font-size: 16pt;
+        }
         .clear {
             clear: both;
         }
@@ -46,12 +50,22 @@
                     <span id="next">&#9197;</span>
                     <span id="play-time"></span>
                 </div>
-                {% for song in album.songs %}
+                {% for song in songs %}
                 <div id="song-{{ song.id }}">
                     <span>{{ song.track_number }}. {{ song.title }}</span>
                     <audio id="song-{{ song.id }}-audio" src="/audio/{{ song.id }}.mp3" type="audio/wav" />
                 </div>
                 {% endfor %}
+                {% if album.wav_zip %}
+                <div class="download">
+                    <a href="{{ url_for('album_wav_zip', album_id=album.id) }}">Download WAVs</a>
+                </div>
+                {% endif %}
+                {% if album.mp3_zip %}
+                <div class="download">
+                    <a href="{{ url_for('album_mp3_zip', album_id=album.id) }}">Download MP3s</a>
+                </div>
+                {% endif %}
             </div>
             <div class="clear"></div>
         </div>
@@ -147,7 +161,7 @@
             };
 
             var songs = [
-                {% for song in album.songs %}
+                {% for song in songs %}
                 "song-{{ song.id }}",
                 {% endfor %}
             ];

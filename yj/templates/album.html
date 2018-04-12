@@ -16,19 +16,30 @@
         #album-art img {
             width: 100%;
         }
-        #songs {
+        #left {
             margin-right: 600px;
             padding: 50px;
         }
-        #songs #controls span {
+        #controls {
+            margin-bottom: 7px;
+            width: 300px;
+            min-height: 60px;
+            padding: 5px;
+        }
+        #controls span {
+            display: inline-block;
             font-style: normal;
             cursor: pointer;
+            min-width: 30px;
         }
         #play-time {
             font-size: 12pt;
         }
         .current-song {
             text-decoration: underline;
+        }
+        .downloads {
+            margin-top: 10px;
         }
         .download {
             font-size: 16pt;
@@ -43,29 +54,33 @@
             <div id="album-art">
                 <img src="/album/{{ album.id }}/art.jpg" alt="album cover">
             </div>
-            <div id="songs">
+            <div id="left">
                 <div id="controls">
                     <span id="play">&#9654;</span>
                     <span id="prev">&#9198;</span>
                     <span id="next">&#9197;</span>
                     <span id="play-time"></span>
                 </div>
-                {% for song in songs %}
-                <div id="song-{{ song.id }}">
-                    <span>{{ song.track_number }}. {{ song.title }}</span>
-                    <audio id="song-{{ song.id }}-audio" src="/audio/{{ song.id }}.mp3" type="audio/wav" />
+                <div id="songs">
+                    {% for song in songs %}
+                    <div id="song-{{ song.id }}">
+                        <span>{{ song.track_number }}. {{ song.title }}</span>
+                        <audio id="song-{{ song.id }}-audio" src="/audio/{{ song.id }}.mp3" type="audio/wav" />
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-                {% if album.wav_zip %}
-                <div class="download">
-                    <a href="{{ url_for('album_wav_zip', album_id=album.id) }}">Download WAVs</a>
+                <div class="downloads">
+                    {% if album.wav_zip %}
+                    <div class="download">
+                        <a href="{{ url_for('album_wav_zip', album_id=album.id) }}">Download WAVs</a>
+                    </div>
+                    {% endif %}
+                    {% if album.mp3_zip %}
+                    <div class="download">
+                        <a href="{{ url_for('album_mp3_zip', album_id=album.id) }}">Download MP3s</a>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-                {% if album.mp3_zip %}
-                <div class="download">
-                    <a href="{{ url_for('album_mp3_zip', album_id=album.id) }}">Download MP3s</a>
-                </div>
-                {% endif %}
             </div>
             <div class="clear"></div>
         </div>
@@ -93,16 +108,12 @@
             }
 
             Player.prototype.play_pause = function() {
-                var cur_song = this.current_song_el();
-
                 if (this.state == "STOPPED") {
                     this.load_song();
                 } else if (this.state == "PAUSED") {
-                    this.state = "PLAYING";
-                    cur_song.play();
+                    this.play();
                 } else {
-                    this.state = "PAUSED";
-                    cur_song.pause();
+                    this.pause();
                 }
             };
 
@@ -134,8 +145,7 @@
                     var play_time = document.getElementById("play-time");
                     play_time.textContent = format_seconds(cur_song.currentTime) + "/" + format_seconds(cur_song.duration);
                 });
-                this.state = "PLAYING";
-                cur_song.play();
+                this.play();
 
                 var cur_song_title = this.current_song_title_el();
                 cur_song_title.setAttribute("class", "current-song");
@@ -143,9 +153,8 @@
 
             Player.prototype.unload_song = function() {
                 var cur_song = this.current_song_el();
-                cur_song.pause();
+                this.pause();
                 cur_song.currentTime = 0;
-                this.state = "PAUSED";
 
                 var cur_song_title = this.current_song_title_el();
                 cur_song_title.removeAttribute("class");
@@ -158,6 +167,22 @@
 
             Player.prototype.current_song_el = function() {
                 return document.getElementById(this.songs[this.current_song] + "-audio");
+            };
+
+            Player.prototype.play = function() {
+                var cur_song = this.current_song_el();
+                cur_song.play();
+                this.state = "PLAYING";
+                var icon = document.getElementById("play");
+                icon.textContent = "\u23F8";
+            };
+
+            Player.prototype.pause = function() {
+                var cur_song = this.current_song_el();
+                cur_song.pause();
+                this.state = "PAUSED";
+                var icon = document.getElementById("play");
+                icon.textContent = "\u25B6";
             };
 
             var songs = [

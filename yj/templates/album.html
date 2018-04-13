@@ -13,12 +13,21 @@
             float: right;
             width: 600px;
         }
-        #album-art img {
-            width: 100%;
-        }
         #left {
             margin-right: 600px;
             padding: 50px;
+        }
+        @media only screen and (max-width: 1000px) {
+            #album-art {
+                float: none;
+                width: 100%;
+            }
+            #left {
+                margin-right: 0;
+            }
+        }
+        #album-art img {
+            width: 100%;
         }
         #controls {
             margin-bottom: 7px;

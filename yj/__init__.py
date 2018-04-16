@@ -1,18 +1,36 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_login import LoginManager, current_user, login_user, logout_user
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 db = SQLAlchemy(app)
 admin = Admin(app, name='yj', template_mode='bootstrap3')
-app.secret_key = 'testtesttest'
-app.config['BAND_NAME'] = 'Yeehaw Junction'
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+app.config.from_pyfile('config.cfg')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
 AUDIO_DIR = 'audio'
 ART_DIR = 'art'
 ZIP_DIR = 'zip'
+
+
+class User:
+    def __init__(self):
+        self.is_authenticated = True
+        self.is_active = True
+        self.is_anonymous = False
+
+    def get_id(self):
+        return '1'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User()
 
 
 class Song(db.Model):
@@ -42,8 +60,34 @@ class Album(db.Model):
         return '<Album: %s>' % self.title
 
 
-admin.add_view(ModelView(Song, db.session))
-admin.add_view(ModelView(Album, db.session))
+class SecureModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login', next=request.url))
+
+
+admin.add_view(SecureModelView(Song, db.session))
+admin.add_view(SecureModelView(Album, db.session))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect('/admin')
+
+    if request.method == 'POST':
+        if request.form["password"] == app.config['PASSWORD']:
+            login_user(User())
+            return redirect('/admin')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/')
 
 
 @app.route('/')

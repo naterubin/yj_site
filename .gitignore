@@ -6,3 +6,4 @@ yj/zip/*
 *pyc
 venv
 *db
+*cfg

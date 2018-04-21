@@ -3,10 +3,12 @@
     <head>
         <title>{{ config['BAND_NAME'] }} - {{ album.title }}</title>
 
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic.css" rel="stylesheet">
+
         <style>
         body {
             max-width: 1600px;
-            font-size: 24pt;
+            font-size: 36pt;
             font-style: italic;
             background-color: {{ album.background_color }};
         }
@@ -26,6 +28,10 @@
             }
             #left {
                 margin-right: 0;
+            }
+            #player {
+                margin-top: 60px;
+                margin-left: 25px;
             }
         }
         #album-art img {
@@ -85,10 +91,11 @@
             <div id="left">
                 <div id="player">
                     <div id="controls">
-                        <span id="play">&#9654;</span>
-                        <span id="prev">&#9198;</span>
-                        <span id="next">&#9197;</span>
+                        <span class="oi" id="play" data-glyph="media-play"></span>
+                        <span class="oi" id="prev" data-glyph="media-step-backward"></span>
+                        <span class="oi" id="next" data-glyph="media-step-forward"></span>
                         <span id="play-time"></span>
+
                     </div>
                     <div id="songs">
                         {% for song in songs %}
@@ -218,7 +225,7 @@
                 cur_song.play();
                 this.state = "PLAYING";
                 var icon = document.getElementById("play");
-                icon.textContent = "\u23F8";
+                icon.dataset.glyph = "media-pause";
             };
 
             Player.prototype.pause = function() {
@@ -226,7 +233,7 @@
                 cur_song.pause();
                 this.state = "PAUSED";
                 var icon = document.getElementById("play");
-                icon.textContent = "\u25B6";
+                icon.dataset.glyph = "media-play";
             };
 
             var songs = [

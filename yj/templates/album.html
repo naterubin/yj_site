@@ -1,272 +1,186 @@
-<!doctype html>
-<html>
-    <head>
-        <title>{{ config['BAND_NAME'] }} - {{ album.title }}</title>
+{% extends "base.html" %}
 
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic.css" rel="stylesheet">
+{% block content %}
+<div id="album-art">
+    <img src="{{ url_for('album_art', album_id=album.id) }}" alt="album cover">
+</div>
+<div id="left">
+    <div id="player">
+        <div id="controls">
+            <span class="oi" id="play" data-glyph="media-play"></span>
+            <span class="oi" id="prev" data-glyph="media-step-backward"></span>
+            <span class="oi" id="next" data-glyph="media-step-forward"></span>
+            <span id="play-time"></span>
 
-        <style>
-        body {
-            max-width: 1600px;
-            font-size: 36pt;
-            font-style: italic;
-            background-color: {{ album.background_color }};
-        }
-        #album-art {
-            float: right;
-            width: 600px;
-            user-select: none;
-        }
-        #left {
-            margin-right: 600px;
-            padding: 50px;
-        }
-        @media only screen and (max-width: 1000px) {
-            #album-art {
-                float: none;
-                width: 100%;
-            }
-            #left {
-                margin-right: 0;
-            }
-            #player {
-                margin-top: 60px;
-                margin-left: 25px;
-            }
-        }
-        #album-art img {
-            width: 100%;
-        }
-        #controls {
-            margin-bottom: 7px;
-            width: 300px;
-            min-height: 60px;
-            padding: 5px;
-            user-select: none;
-        }
-        #controls span {
-            display: inline-block;
-            font-style: normal;
-            cursor: pointer;
-            min-width: 30px;
-        }
-        #play-time {
-            font-size: 12pt;
-        }
-        .song-title {
-            width: 100%;
-        }
-        .lyrics-link {
-            font-size: 14pt;
-            vertical-align: sub;
-            float: right;
-            text-decoration: underline;
-            cursor: pointer;
-            user-select: none;
-        }
-        .art-close {
-            cursor: pointer;
-            user-select: none;
-        }
-        #current-song {
-            text-decoration: underline;
-        }
-        .downloads {
-            margin-top: 10px;
-        }
-        .download {
-            font-size: 16pt;
-            user-select: none;
-        }
-        .clear {
-            clear: both;
-        }
-        </style>
-    </head>
-    <body>
-        <div id="content">
-            <div id="album-art">
-                <img src="{{ url_for('album_art', album_id=album.id) }}" alt="album cover">
-            </div>
-            <div id="left">
-                <div id="player">
-                    <div id="controls">
-                        <span class="oi" id="play" data-glyph="media-play"></span>
-                        <span class="oi" id="prev" data-glyph="media-step-backward"></span>
-                        <span class="oi" id="next" data-glyph="media-step-forward"></span>
-                        <span id="play-time"></span>
-
-                    </div>
-                    <div id="songs">
-                        {% for song in songs %}
-                        <div id="song-{{ song.id }}">
-                            <div class="song-title">
-                                {{ song.track_number }}. {{ song.title }}
-                                {% if song.art %}
-                                <span class="lyrics-link">Lyrics</span>
-                                {% endif %}
-                            </div>
-                            <audio id="song-{{ song.id }}-audio" src="/audio/{{ song.id }}.mp3" type="audio/wav" />
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <div class="downloads">
-                        {% if album.wav_zip %}
-                        <div class="download">
-                            <a href="{{ url_for('album_wav_zip', album_id=album.id) }}">Download WAVs</a>
-                        </div>
-                        {% endif %}
-                        {% if album.mp3_zip %}
-                        <div class="download">
-                            <a href="{{ url_for('album_mp3_zip', album_id=album.id) }}">Download MP3s</a>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                {% for song in songs %}
-                {% if song.art %}
-                <div id="song-{{ song.id }}-art" style="display:none">
-                    <span class="art-close">X</span>
-                    <!--<img src="{{ url_for('song_art', song_id=song.id) }}" alt="{{ song.title }} art">-->
-                    <img src="http://via.placeholder.com/550x850?text={{ song.title }}" alt="song art">
-                </div>
-                {% endif %}
-                {% endfor %}
-            </div>
-            <div class="clear"></div>
         </div>
+        <div id="songs">
+            {% for song in songs %}
+            <div id="song-{{ song.id }}">
+                <div class="song-title">
+                    {{ song.track_number }}. {{ song.title }}
+                    {% if song.art %}
+                    <span class="lyrics-link">Lyrics</span>
+                    {% endif %}
+                </div>
+                <audio id="song-{{ song.id }}-audio" src="/audio/{{ song.id }}.mp3" type="audio/wav" />
+            </div>
+            {% endfor %}
+        </div>
+        <div class="downloads">
+            {% if album.wav_zip %}
+            <div class="download">
+                <a href="{{ url_for('album_wav_zip', album_id=album.id) }}">Download WAVs</a>
+            </div>
+            {% endif %}
+            {% if album.mp3_zip %}
+            <div class="download">
+                <a href="{{ url_for('album_mp3_zip', album_id=album.id) }}">Download MP3s</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% for song in songs %}
+    {% if song.art %}
+    <div id="song-{{ song.id }}-art" style="display:none">
+        <span class="art-close">X</span>
+        <!--<img src="{{ url_for('song_art', song_id=song.id) }}" alt="{{ song.title }} art">-->
+        <img src="http://via.placeholder.com/550x850?text={{ song.title }}" alt="song art">
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+<div class="clear"></div>
+{% endblock %}
 
-        <script>
-            function format_seconds(secs) {
-                var minutes = Math.floor(secs / 60);
-                var seconds = Math.floor(secs % 60);
+{% block js %}
+function format_seconds(secs) {
+    var minutes = Math.floor(secs / 60);
+    var seconds = Math.floor(secs % 60);
 
-                if (seconds < 10) {
-                    seconds = "0" + seconds;
-                }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
 
-                return minutes + ":" + seconds;
-            }
+    return minutes + ":" + seconds;
+}
 
-            function Player(play, prev, next, songs) {
-                this.current_song = 0;
-                this.songs = songs;
-                this.state = "STOPPED";
+function Player(play, prev, next, songs) {
+    this.current_song = 0;
+    this.songs = songs;
+    this.state = "STOPPED";
 
-                play.onclick = this.play_pause.bind(this);
-                prev.onclick = this.prev.bind(this);
-                next.onclick = this.next.bind(this);
-            }
+    play.onclick = this.play_pause.bind(this);
+    prev.onclick = this.prev.bind(this);
+    next.onclick = this.next.bind(this);
+}
 
-            Player.prototype.play_pause = function() {
-                if (this.state == "STOPPED") {
-                    this.load_song();
-                } else if (this.state == "PAUSED") {
-                    this.play();
-                } else {
-                    this.pause();
-                }
-            };
+Player.prototype.play_pause = function() {
+    if (this.state == "STOPPED") {
+        this.load_song();
+    } else if (this.state == "PAUSED") {
+        this.play();
+    } else {
+        this.pause();
+    }
+};
 
-            Player.prototype.next = function() {
-                this.unload_song();
+Player.prototype.next = function() {
+    this.unload_song();
 
-                if (this.current_song < this.songs.length - 1) {
-                    this.current_song += 1;
-                    this.load_song();
-                } else {
-                    this.current_song = 0;
-                    this.state = "STOPPED";
-                }
-            };
+    if (this.current_song < this.songs.length - 1) {
+        this.current_song += 1;
+        this.load_song();
+    } else {
+        this.current_song = 0;
+        this.state = "STOPPED";
+    }
+};
 
-            Player.prototype.prev = function() {
-                this.unload_song();
+Player.prototype.prev = function() {
+    this.unload_song();
 
-                if (this.current_song > 0) {
-                    this.current_song -= 1;
-                    this.load_song();
-                }
-            };
+    if (this.current_song > 0) {
+        this.current_song -= 1;
+        this.load_song();
+    }
+};
 
-            Player.prototype.load_song = function() {
-                var cur_song = this.current_song_el();
-                cur_song.onended = this.next.bind(this);
-                cur_song.addEventListener("timeupdate", function () {
-                    var play_time = document.getElementById("play-time");
-                    play_time.textContent = format_seconds(cur_song.currentTime) + "/" + format_seconds(cur_song.duration);
-                });
-                this.play();
+Player.prototype.load_song = function() {
+    var cur_song = this.current_song_el();
+    cur_song.onended = this.next.bind(this);
+    cur_song.addEventListener("timeupdate", function () {
+        var play_time = document.getElementById("play-time");
+        play_time.textContent = format_seconds(cur_song.currentTime) + "/" + format_seconds(cur_song.duration);
+    });
+    this.play();
 
-                var cur_song_title = this.current_song_title_el();
-                cur_song_title.setAttribute("id", "current-song");
-            };
+    var cur_song_title = this.current_song_title_el();
+    cur_song_title.setAttribute("id", "current-song");
+};
 
-            Player.prototype.unload_song = function() {
-                var cur_song = this.current_song_el();
-                this.pause();
-                cur_song.currentTime = 0;
+Player.prototype.unload_song = function() {
+    var cur_song = this.current_song_el();
+    this.pause();
+    cur_song.currentTime = 0;
 
-                var cur_song_title = this.current_song_title_el();
-                cur_song_title.removeAttribute("id");
-            };
+    var cur_song_title = this.current_song_title_el();
+    cur_song_title.removeAttribute("id");
+};
 
-            Player.prototype.current_song_title_el = function() {
-                var song_div = document.getElementById(this.songs[this.current_song]);
-                return song_div.firstElementChild;
-            };
+Player.prototype.current_song_title_el = function() {
+    var song_div = document.getElementById(this.songs[this.current_song]);
+    return song_div.firstElementChild;
+};
 
-            Player.prototype.current_song_el = function() {
-                return document.getElementById(this.songs[this.current_song] + "-audio");
-            };
+Player.prototype.current_song_el = function() {
+    return document.getElementById(this.songs[this.current_song] + "-audio");
+};
 
-            Player.prototype.play = function() {
-                var cur_song = this.current_song_el();
-                cur_song.play();
-                this.state = "PLAYING";
-                var icon = document.getElementById("play");
-                icon.dataset.glyph = "media-pause";
-            };
+Player.prototype.play = function() {
+    var cur_song = this.current_song_el();
+    cur_song.play();
+    this.state = "PLAYING";
+    var icon = document.getElementById("play");
+    icon.dataset.glyph = "media-pause";
+};
 
-            Player.prototype.pause = function() {
-                var cur_song = this.current_song_el();
-                cur_song.pause();
-                this.state = "PAUSED";
-                var icon = document.getElementById("play");
-                icon.dataset.glyph = "media-play";
-            };
+Player.prototype.pause = function() {
+    var cur_song = this.current_song_el();
+    cur_song.pause();
+    this.state = "PAUSED";
+    var icon = document.getElementById("play");
+    icon.dataset.glyph = "media-play";
+};
 
-            var songs = [
-                {% for song in songs %}
-                "song-{{ song.id }}",
-                {% endfor %}
-            ];
+var songs = [
+    {% for song in songs %}
+    "song-{{ song.id }}",
+    {% endfor %}
+];
 
-            var player = new Player(
-                document.getElementById("play"),
-                document.getElementById("prev"),
-                document.getElementById("next"),
-                songs
-            );
+var player = new Player(
+    document.getElementById("play"),
+    document.getElementById("prev"),
+    document.getElementById("next"),
+    songs
+);
 
-            songs.forEach(function(song) {
-                var lyric_link_el = document.querySelector("#" + song + " .lyrics-link");
-                if (lyric_link_el != null) {
-                    var lyric_el = document.getElementById(song + "-art");
-                    var player_el = document.getElementById("player");
+songs.forEach(function(song) {
+    var lyric_link_el = document.querySelector("#" + song + " .lyrics-link");
+    if (lyric_link_el != null) {
+        var lyric_el = document.getElementById(song + "-art");
+        var player_el = document.getElementById("player");
 
-                    lyric_link_el.onclick = function() {
-                        lyric_el.removeAttribute("style");
-                        player_el.setAttribute("style", "display:none");
-                    };
+        lyric_link_el.onclick = function() {
+            lyric_el.removeAttribute("style");
+            player_el.setAttribute("style", "display:none");
+        };
 
-                    var lyric_closer = document.querySelector("#" + song + "-art .art-close");
-                    lyric_closer.onclick = function() {
-                        lyric_el.setAttribute("style", "display:none");
-                        player_el.removeAttribute("style");
-                    };
-                }
-            });
-        </script>
-    </body>
-</html>
+        var lyric_closer = document.querySelector("#" + song + "-art .art-close");
+        lyric_closer.onclick = function() {
+            lyric_el.setAttribute("style", "display:none");
+            player_el.removeAttribute("style");
+        };
+    }
+});
+{% endblock %}

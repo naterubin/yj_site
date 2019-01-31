@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{{ config['BAND_NAME'] }} - {{ album.title }}</title>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic.css" rel="stylesheet">
+
+        <style>
+        body {
+            max-width: 1600px;
+            font-size: 36pt;
+            font-style: italic;
+            background-color: {{ album.background_color }};
+        }
+        #album-art {
+            float: right;
+            width: 600px;
+            user-select: none;
+        }
+        #left {
+            margin-right: 600px;
+            padding: 50px;
+        }
+        @media only screen and (max-width: 1000px) {
+            #album-art {
+                float: none;
+                width: 100%;
+            }
+            #left {
+                margin-right: 0;
+            }
+            #player {
+                margin-top: 60px;
+                margin-left: 25px;
+            }
+        }
+        #album-art img {
+            width: 100%;
+        }
+        #controls {
+            margin-bottom: 7px;
+            width: 300px;
+            min-height: 60px;
+            padding: 5px;
+            user-select: none;
+        }
+        #controls span {
+            display: inline-block;
+            font-style: normal;
+            cursor: pointer;
+            min-width: 30px;
+        }
+        #play-time {
+            font-size: 12pt;
+        }
+        .song-title {
+            width: 100%;
+        }
+        .lyrics-link {
+            font-size: 14pt;
+            vertical-align: sub;
+            float: right;
+            text-decoration: underline;
+            cursor: pointer;
+            user-select: none;
+        }
+        .art-close {
+            cursor: pointer;
+            user-select: none;
+        }
+        #current-song {
+            text-decoration: underline;
+        }
+        .downloads {
+            margin-top: 10px;
+        }
+        .download {
+            font-size: 16pt;
+            user-select: none;
+        }
+        .clear {
+            clear: both;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+        <script>
+            {% block js %}{% endblock %}
+        </script>
+    </body>
+</html>

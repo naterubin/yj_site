@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ config['BAND_NAME'] }}</h1>
+
+<h4>Upcoming shows</h4>
+<ul>
+  {% for show in shows %}
+  <li><a href="{{ show.link }}">{{ show.date }} {{ show.name }}</a></li>
+  {% endfor %}
+</ul>
+
+<h4>Albums</h4>
+<ul>
+  {% for album in albums %}
+  <li><a href="{{ url_for('album', album_id=album.id) }}">{{ album.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

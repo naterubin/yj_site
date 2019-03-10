@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>{{ config['BAND_NAME'] }} - {{ album.title }}</title>
+        <title>{{ config['BAND_NAME'] }}</title>
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic.css" rel="stylesheet">
 
@@ -10,7 +10,7 @@
             max-width: 1600px;
             font-size: 36pt;
             font-style: italic;
-            background-color: {{ album.background_color }};
+            background-color: {{ config['BACKGROUND_COLOR'] }};
         }
         #album-art {
 	    margin-top: 40px;

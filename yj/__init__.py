@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, render_template, send_from_directory, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
@@ -62,6 +64,17 @@ class Album(db.Model):
         return '<Album: %s>' % self.title
 
 
+class Show(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(300), nullable=False)
+    date = db.Column(db.Date)
+    description = db.Column(db.Text, default='')
+    link = db.Column(db.String(500))
+
+    def __repr__(self):
+        return '<Show: %s>' % self.name
+
+
 class SecureModelView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
@@ -72,6 +85,7 @@ class SecureModelView(ModelView):
 
 admin.add_view(SecureModelView(Song, db.session))
 admin.add_view(SecureModelView(Album, db.session))
+admin.add_view(SecureModelView(Show, db.session))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -94,13 +108,10 @@ def logout():
 
 @app.route('/')
 def index():
-    try:
-        album = Album.query.all()[0]
-    except IndexError:
-        return "Nothin' here yet, bub."
+    albums = Album.query.all()
+    shows = Show.query.filter(Show.date > datetime.utcnow()).order_by(Show.date)
 
-    songs = sorted(album.songs, key=lambda song: song.track_number)
-    return render_template('album.html', album=album, songs=songs)
+    return render_template('index.html', albums=albums, shows=shows)
 
 
 @app.route('/album/<int:album_id>/art.jpg')

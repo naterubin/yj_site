@@ -13,9 +13,15 @@
             background-color: {{ album.background_color }};
         }
         #album-art {
+	    margin-top: 40px;
             float: right;
             width: 600px;
             user-select: none;
+        }
+        #album-art > iframe {
+	    border: 0;
+       	    width: 100%;
+       	    height: 900px;
         }
         #left {
             margin-right: 600px;
@@ -23,8 +29,15 @@
         }
         @media only screen and (max-width: 1000px) {
             #album-art {
-                float: none;
-                width: 100%;
+	        margin-top: 40px;
+                text-align: center;
+        	width: 100%;
+            }
+            #album-art > iframe {
+	        border: 0;
+                width: 700px;
+        	height: 900px;
+        	display: inline-block;
             }
             #left {
                 margin-right: 0;

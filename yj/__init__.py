@@ -52,6 +52,8 @@ class Album(db.Model):
     title = db.Column(db.String(120), nullable=False)
     count = db.Column(db.Integer, default=0)
     art = db.Column(db.String(500))
+    bandcamp_embed = db.Column(db.String(500))
+    description = db.Column(db.Text, default='')
     wav_zip = db.Column(db.String(500))
     mp3_zip = db.Column(db.String(500))
     background_color = db.Column(db.String(7), default="#a0a0a0")
@@ -105,6 +107,13 @@ def index():
 def album_art(album_id):
     album = Album.query.filter_by(id=album_id).first()
     return send_from_directory(ART_DIR, album.art)
+
+
+@app.route('/album/<int:album_id>')
+def album(album_id):
+    album = Album.query.filter_by(id=album_id).first()
+    songs = sorted(album.songs, key=lambda song: song.track_number)
+    return render_template('album.html', album=album, songs=songs)
 
 
 @app.route('/album/<int:album_id>/wav.zip')

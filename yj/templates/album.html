@@ -2,9 +2,17 @@
 
 {% block content %}
 <div id="album-art">
+{% if album.bandcamp_embed %}
+    {{ album.bandcamp_embed|safe }}
+{% else %}
     <img src="{{ url_for('album_art', album_id=album.id) }}" alt="album cover">
+{% endif %}
 </div>
 <div id="left">
+    <h3>{{ album.title }}</h3>
+    {% if album.bandcamp_embed %}
+    <p>{{ album.description }}</p>
+    {% else %}
     <div id="player">
         <div id="controls">
             <span class="oi" id="play" data-glyph="media-play"></span>
@@ -48,6 +56,7 @@
     </div>
     {% endif %}
     {% endfor %}
+    {% endif %}
 </div>
 <div class="clear"></div>
 {% endblock %}

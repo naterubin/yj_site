@@ -28,20 +28,29 @@
         }
         #album-art {
 	    margin-top: 40px;
-            float: right;
-            width: 600px;
+        /*    float: right; */
+        /*    width: 600px; */
+            width: 100%;
+            text-align: center;
             user-select: none;
         }
         #album-art > iframe {
 	    border: 0;
-       	    width: 100%;
+       	    /*width: 100%; */
+            width: 700px;
        	    height: 900px;
+            display: inline-block;
         }
         #left {
-            margin-right: 600px;
+            /*margin-right: 600px;*/
+            margin-right: 0;
             padding: 50px;
         }
-        @media only screen and (max-width: 1000px) {
+        #player {
+            margin-top: 60px;
+            margin-left: 25px;
+        }
+        /*@media only screen and (max-width: 1000px) {
             #album-art {
 	        margin-top: 40px;
                 text-align: center;
@@ -60,7 +69,7 @@
                 margin-top: 60px;
                 margin-left: 25px;
             }
-        }
+        }*/
         #album-art img {
             width: 100%;
         }
